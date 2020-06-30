@@ -4120,6 +4120,16 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
   if (UseSYCLTriple) {
     // We want to compile sycl kernels.
     CmdArgs.push_back("-fsycl");
+    if (types::isCXX(Input.getType())) {
+      // Take the given -std option otherwise default to c++11 the minimum C++
+      // version supported in SYCL
+      if (Arg *A = Args.getLastArg(options::OPT_std_EQ))
+        CmdArgs.push_back(Args.MakeArgString(std::string("-std=")
+                          + A->getValue()));
+      else
+        CmdArgs.push_back("-std=c++11");
+    }
+
     CmdArgs.push_back("-fsycl-is-device");
     CmdArgs.push_back("-fdeclare-spirv-builtins");
 
@@ -4170,7 +4180,27 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
       // Ensure the default version in SYCL mode is 1.2.1 (aka 2017)
       CmdArgs.push_back("-sycl-std=2017");
     }
+
+    if (Args.hasFlag(options::OPT_fsycl_allow_virtual,
+                     options::OPT_fno_sycl_allow_virtual, false)) {
+      CmdArgs.push_back("-fsycl-allow-virtual");
+    }
+
+    if (Args.hasFlag(options::OPT_fsycl_allow_variadic_func,
+                     options::OPT_fno_sycl_allow_variadic_func, false)) {
+      CmdArgs.push_back("-fsycl-allow-variadic-func");
+    }
   }
+
+  // \todo Extend this to use getOffloadToolChains<Action::OFK_SYCL> and loop
+  // over to check for the Xilinx triple or even better make this reliant on the
+  // triple of the thing currently being compiled. To do this we would need to
+  // remove the reliance on a host side definition (__SYCL_XILINX_ONLY__)
+  // inside of InitPreprocessor.cpp
+  if (IsSYCL
+      && C.getSingleOffloadToolChain<Action::OFK_SYCL>()
+          ->getTriple().isXilinxFPGA())
+    CmdArgs.push_back("-fsycl-xocc");
 
   if (IsOpenMPDevice) {
     // We have to pass the triple of the host if compiling for an OpenMP device.

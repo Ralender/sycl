@@ -340,7 +340,7 @@ public:
       }
 
       if (const CXXMethodDecl *Method = dyn_cast<CXXMethodDecl>(Callee))
-        if (Method->isVirtual())
+        if (!SemaRef.getLangOpts().SYCLAllowVirtual && Method->isVirtual())
           SemaRef.Diag(e->getExprLoc(), diag::err_sycl_restrict)
               << Sema::KernelCallVirtualFunction;
 
@@ -801,7 +801,7 @@ static void VisitArrayElements(RangeTy Item, QualType FieldTy,
   const ConstantArrayType *CAT = cast<ConstantArrayType>(FieldTy);
   QualType ET = CAT->getElementType();
   int64_t ElemCount = CAT->getSize().getSExtValue();
-  std::initializer_list<int>{(handlers.enterArray(), 0)...};
+  (void)std::initializer_list<int>{(handlers.enterArray(), 0)...};
   for (int64_t Count = 0; Count < ElemCount; Count++) {
     VisitField(nullptr, Item, ET, handlers...);
     (void)std::initializer_list<int>{(handlers.nextElement(ET), 0)...};

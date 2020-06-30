@@ -144,11 +144,10 @@ int main() {
       smplr.use();
     }
   });
-
-    kernel_single_task<class fourth_kernel<template_arg_ns::namespaced_arg<1>>>([=]() {
-      if (i == 13) {
-        acc2.use();
-      }
+  kernel_single_task<class fourth_kernel<template_arg_ns::namespaced_arg<1>>>([=]() {
+    if (i == 13) {
+      acc2.use();
+    }
   });
 
   // FIXME: We cannot use the member-capture because all the handlers except the

@@ -1110,13 +1110,28 @@ static void InitializePredefinedMacros(const TargetInfo &TI,
     Builder.defineMacro("SYCL_EXTERNAL", "__attribute__((sycl_device))");
 
     if (TI.getTriple().isNVPTX()) {
-        Builder.defineMacro("__SYCL_NVPTX__", "1");
+      Builder.defineMacro("__SYCL_NVPTX__", "1");
+    }
+    // Defines a macro that switches on SPIR intrinsics in SYCL runtime, used
+    // by Xilinx FPGA devices for the moment
+    if (LangOpts.SYCLXOCCDevice) {
+      Builder.defineMacro("__SYCL_SPIR_DEVICE__");
     }
   }
   if (LangOpts.SYCLExplicitSIMD)
     Builder.defineMacro("__SYCL_EXPLICIT_SIMD__", "1");
   if (LangOpts.SYCLUnnamedLambda)
     Builder.defineMacro("__SYCL_UNNAMED_LAMBDA__", "1");
+
+  // These are defined for both the host and device compilation phases when it's
+  // a Xilinx SYCL FPGA device.
+  // Note: I don't think pushing Xilinx defines onto the host compilation will
+  // be a good long term solution, it will probably cause some conflicts when
+  // compiling for multiple targets, what if I want to compile for both an Intel
+  // and Xilinx platform? Will they mesh well on the host?
+  if (LangOpts.SYCLXOCCDevice)
+    Builder.defineMacro("__SYCL_XILINX_ONLY__");
+
 
   // OpenCL definitions.
   if (LangOpts.OpenCL) {

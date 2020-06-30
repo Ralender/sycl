@@ -1,0 +1,12 @@
+add_llvm_component_library(LLVMSYCL
+  ASFixer.cpp
+  InSPIRation.cpp
+  KernelPropGen.cpp
+  XOCCIRDowngrader.cpp
+
+  ADDITIONAL_HEADER_DIRS
+  ${LLVM_MAIN_INCLUDE_DIR}/llvm/SYCL
+
+  DEPENDS
+  intrinsics_gen
+)

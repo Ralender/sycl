@@ -25,6 +25,7 @@ set(LLVM_LINK_COMPONENTS
   TransformUtils
   Vectorize
   Passes
+  SYCL
   )
 
 add_llvm_tool(opt

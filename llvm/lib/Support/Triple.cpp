@@ -79,6 +79,8 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case x86:            return "i386";
   case x86_64:         return "x86_64";
   case xcore:          return "xcore";
+  case fpga32:         return "fpga32";
+  case fpga64:         return "fpga64";
   }
 
   llvm_unreachable("Invalid ArchType!");
@@ -185,6 +187,7 @@ StringRef Triple::getVendorTypeName(VendorType Kind) {
   case PC: return "pc";
   case SCEI: return "scei";
   case SUSE: return "suse";
+  case Xilinx: return "xilinx";
   }
 
   llvm_unreachable("Invalid VendorType!");
@@ -337,6 +340,8 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
       .Case("fpga_aocx", fpga_aocx)
       .Case("fpga_dep", fpga_dep)
       .Case("ve", ve)
+      .Case("fpga32", fpga32)
+      .Case("fpga64", fpga64)
       .Default(UnknownArch);
 }
 
@@ -470,6 +475,8 @@ static Triple::ArchType parseArch(StringRef ArchName) {
                 .Case("ve", Triple::ve)
                 .Case("wasm32", Triple::wasm32)
                 .Case("wasm64", Triple::wasm64)
+                .Case("fpga32", Triple::fpga32)
+                .Case("fpga64", Triple::fpga64)
                 .Default(Triple::UnknownArch);
 
   // Some architectures require special parsing logic just to compute the
@@ -504,6 +511,7 @@ static Triple::VendorType parseVendor(StringRef VendorName) {
     .Case("suse", Triple::SUSE)
     .Case("oe", Triple::OpenEmbedded)
     .Case("intel", Triple::Intel)
+    .Case("xilinx", Triple::Xilinx)
     .Default(Triple::UnknownVendor);
 }
 
@@ -718,6 +726,8 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::fpga_aocr:
   case Triple::fpga_aocx:
   case Triple::fpga_dep:
+  case Triple::fpga32:
+  case Triple::fpga64:
   case Triple::hexagon:
   case Triple::hsail64:
   case Triple::hsail:
@@ -1308,6 +1318,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::wasm32:
   case llvm::Triple::x86:
   case llvm::Triple::xcore:
+  case llvm::Triple::fpga32:
     return 32;
 
   case llvm::Triple::aarch64:
@@ -1331,6 +1342,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::ve:
   case llvm::Triple::wasm64:
   case llvm::Triple::x86_64:
+  case llvm::Triple::fpga64:
     return 64;
   }
   llvm_unreachable("Invalid architecture value");
@@ -1395,6 +1407,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::wasm32:
   case Triple::x86:
   case Triple::xcore:
+  case Triple::fpga32:
     // Already 32-bit.
     break;
 
@@ -1413,6 +1426,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::spir64:         T.setArch(Triple::spir);    break;
   case Triple::wasm64:         T.setArch(Triple::wasm32);  break;
   case Triple::x86_64:         T.setArch(Triple::x86);     break;
+  case Triple::fpga64:         T.setArch(Triple::fpga32);    break;
   }
   return T;
 }
@@ -1461,6 +1475,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::ve:
   case Triple::wasm64:
   case Triple::x86_64:
+  case Triple::fpga64:
     // Already 64-bit.
     break;
 
@@ -1482,6 +1497,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::thumbeb:         T.setArch(Triple::aarch64_be); break;
   case Triple::wasm32:          T.setArch(Triple::wasm64);     break;
   case Triple::x86:             T.setArch(Triple::x86_64);     break;
+  case Triple::fpga32:          T.setArch(Triple::fpga64);     break;
   }
   return T;
 }
@@ -1520,6 +1536,8 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::x86_64:
   case Triple::xcore:
   case Triple::ve:
+  case Triple::fpga32:
+  case Triple::fpga64:
 
   // ARM is intentionally unsupported here, changing the architecture would
   // drop any arch suffixes.
@@ -1612,6 +1630,8 @@ bool Triple::isLittleEndian() const {
   case Triple::x86:
   case Triple::x86_64:
   case Triple::xcore:
+  case Triple::fpga32:
+  case Triple::fpga64:
     return true;
   default:
     return false;

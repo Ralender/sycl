@@ -46,6 +46,7 @@
 #include "ToolChains/TCE.h"
 #include "ToolChains/WebAssembly.h"
 #include "ToolChains/XCore.h"
+#include "ToolChains/XOCC.h"
 #include "clang/Basic/Version.h"
 #include "clang/Config/config.h"
 #include "clang/Driver/Action.h"
@@ -681,6 +682,7 @@ void Driver::CreateOffloadingDeviceToolChains(Compilation &C,
     auto OFK = Action::OFK_HIP;
     DeviceTripleStr = "amdgcn-amd-amdhsa";
     llvm::Triple HIPTriple(DeviceTripleStr);
+
     // Use the HIP and host triples as the key into
     // getOffloadingDeviceToolChain, because the device toolchain we create
     // depends on both.
@@ -6513,6 +6515,11 @@ const ToolChain &Driver::getOffloadingDeviceToolChain(const ArgList &Args,
           case llvm::Triple::nvptx64:
             TC = std::make_unique<toolchains::CudaToolChain>(
               *this, Target, HostTC, Args, TargetDeviceOffloadKind);
+            break;
+          case llvm::Triple::fpga32:
+          case llvm::Triple::fpga64:
+            TC = std::make_unique<toolchains::XOCCToolChain>(
+              *this, Target, HostTC, Args);
             break;
           default:
           break;
