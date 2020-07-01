@@ -33,6 +33,7 @@
 #include "llvm/IR/AbstractCallSite.h"
 #include "llvm/Pass.h"
 #include "llvm/Support/Debug.h"
+#include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/raw_ostream.h"
 
 #define BOOST_NO_EXCEPTIONS
@@ -47,8 +48,10 @@
 // BOOST_NO_EXCEPTIONS enabled so we need to define our own throw_exception or
 // get a linker error.
 namespace boost {
-  void throw_exception(std::exception const & e) {}
+void throw_exception(std::exception const &e, boost::source_location const &) {
+  llvm_unreachable("");
 }
+} // namespace boost
 
 using namespace llvm;
 

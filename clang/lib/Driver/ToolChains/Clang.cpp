@@ -27,6 +27,7 @@
 #include "clang/Basic/LangOptions.h"
 #include "clang/Basic/ObjCRuntime.h"
 #include "clang/Basic/Version.h"
+#include "clang/Driver/Action.h"
 #include "clang/Driver/Distro.h"
 #include "clang/Driver/DriverDiagnostic.h"
 #include "clang/Driver/Options.h"
@@ -4181,11 +4182,6 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
       CmdArgs.push_back("-sycl-std=2017");
     }
 
-    if (Args.hasFlag(options::OPT_fsycl_allow_virtual,
-                     options::OPT_fno_sycl_allow_virtual, false)) {
-      CmdArgs.push_back("-fsycl-allow-virtual");
-    }
-
     if (Args.hasFlag(options::OPT_fsycl_allow_variadic_func,
                      options::OPT_fno_sycl_allow_variadic_func, false)) {
       CmdArgs.push_back("-fsycl-allow-variadic-func");
@@ -4197,9 +4193,9 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
   // triple of the thing currently being compiled. To do this we would need to
   // remove the reliance on a host side definition (__SYCL_XILINX_ONLY__)
   // inside of InitPreprocessor.cpp
-  if (IsSYCL
-      && C.getSingleOffloadToolChain<Action::OFK_SYCL>()
-          ->getTriple().isXilinxFPGA())
+  if (IsSYCL &&
+      llvm::any_of(llvm::make_range(C.getOffloadToolChains<Action::OFK_SYCL>()),
+                   [](auto T) { return T.second->getTriple().isXilinxFPGA(); }))
     CmdArgs.push_back("-fsycl-xocc");
 
   if (IsOpenMPDevice) {
