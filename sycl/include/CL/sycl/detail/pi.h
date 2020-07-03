@@ -54,25 +54,12 @@
 extern "C" {
 #endif // __cplusplus
 
-<<<<<<< HEAD
 using pi_int32 = int32_t;
 using pi_uint32 = uint32_t;
 using pi_uint64 = uint64_t;
 using pi_bool = pi_uint32;
 using pi_bitfield = pi_uint64;
 using pi_native_handle = uintptr_t;
-||||||| merged common ancestors
-typedef  int32_t    pi_int32;
-typedef uint32_t    pi_uint32;
-typedef uint64_t    pi_uint64;
-typedef pi_uint32   pi_bool;
-=======
-typedef int32_t     pi_int32;
-typedef uint32_t    pi_uint32;
-typedef uint64_t    pi_uint64;
-typedef pi_uint32   pi_bool;
-typedef pi_uint64   pi_bitfield;
->>>>>>> sycl/unified/master
 
 //
 // NOTE: prefer to map 1:1 to OpenCL so that no translation is needed
@@ -82,7 +69,6 @@ typedef pi_uint64   pi_bitfield;
 // TODO: populate PI enums.
 //
 typedef enum {
-<<<<<<< HEAD
   PI_SUCCESS = CL_SUCCESS,
   PI_INVALID_KERNEL_NAME = CL_INVALID_KERNEL_NAME,
   PI_INVALID_OPERATION = CL_INVALID_OPERATION,
@@ -112,20 +98,6 @@ typedef enum {
   PI_IMAGE_FORMAT_NOT_SUPPORTED = CL_IMAGE_FORMAT_NOT_SUPPORTED,
   PI_MEM_OBJECT_ALLOCATION_FAILURE = CL_MEM_OBJECT_ALLOCATION_FAILURE,
   PI_ERROR_UNKNOWN = -999
-||||||| merged common ancestors
-  PI_SUCCESS = CL_SUCCESS,
-  PI_RESULT_INVALID_KERNEL_NAME = CL_INVALID_KERNEL_NAME
-=======
-  PI_SUCCESS                    = CL_SUCCESS,
-  PI_RESULT_INVALID_KERNEL_NAME = CL_INVALID_KERNEL_NAME,
-  PI_INVALID_OPERATION          = CL_INVALID_OPERATION,
-  PI_INVALID_QUEUE_PROPERTIES   = CL_INVALID_QUEUE_PROPERTIES,
-  PI_INVALID_VALUE              = CL_INVALID_VALUE,
-  PI_INVALID_CONTEXT            = CL_INVALID_CONTEXT,
-  PI_INVALID_PLATFORM           = CL_INVALID_PLATFORM,
-  PI_INVALID_DEVICE             = CL_INVALID_DEVICE,
-  PI_OUT_OF_HOST_MEMORY         = CL_OUT_OF_HOST_MEMORY
->>>>>>> sycl/unified/master
 } _pi_result;
 
 typedef enum {
@@ -530,23 +502,10 @@ typedef enum {
 // make the translation to OpenCL transparent.
 // TODO: populate
 //
-<<<<<<< HEAD
 using pi_mem_flags = pi_bitfield;
-||||||| merged common ancestors
-typedef pi_uint64 pi_mem_flags;
-=======
-typedef pi_bitfield pi_mem_flags;
->>>>>>> sycl/unified/master
 // Access
-<<<<<<< HEAD
 constexpr pi_mem_flags PI_MEM_FLAGS_ACCESS_RW = CL_MEM_READ_WRITE;
-||||||| merged common ancestors
-const pi_uint64 PI_MEM_FLAGS_ACCESS_RW     = CL_MEM_READ_WRITE;
-=======
-const pi_mem_flags PI_MEM_FLAGS_ACCESS_RW     = CL_MEM_READ_WRITE;
->>>>>>> sycl/unified/master
 // Host pointer
-<<<<<<< HEAD
 constexpr pi_mem_flags PI_MEM_FLAGS_HOST_PTR_USE = CL_MEM_USE_HOST_PTR;
 constexpr pi_mem_flags PI_MEM_FLAGS_HOST_PTR_COPY = CL_MEM_COPY_HOST_PTR;
 
@@ -646,87 +605,18 @@ struct _pi_device_binary_property_set_struct {
 };
 
 typedef _pi_device_binary_property_set_struct *pi_device_binary_property_set;
-||||||| merged common ancestors
-const pi_uint64 PI_MEM_FLAGS_HOST_PTR_USE  = CL_MEM_USE_HOST_PTR;
-const pi_uint64 PI_MEM_FLAGS_HOST_PTR_COPY = CL_MEM_COPY_HOST_PTR;
-
-typedef _pi_result                  pi_result;
-typedef _pi_platform_info           pi_platform_info;
-typedef _pi_device_type             pi_device_type;
-typedef _pi_device_info             pi_device_info;
-typedef _pi_context_info            pi_context_info;
-typedef _pi_queue_info              pi_queue_info;
-typedef _pi_image_info              pi_image_info;
-typedef _pi_mem_type                pi_mem_type;
-typedef _pi_image_channel_order     pi_image_channel_order;
-typedef _pi_image_channel_type      pi_image_channel_type;
-
-// Opaque data type for compatibility with OpenMP.
-typedef void * _pi_offload_entry;
-=======
-const pi_mem_flags PI_MEM_FLAGS_HOST_PTR_USE  = CL_MEM_USE_HOST_PTR;
-const pi_mem_flags PI_MEM_FLAGS_HOST_PTR_COPY = CL_MEM_COPY_HOST_PTR;
-
-// NOTE: queue properties is implemented this way to better support bit
-// manipulations
-typedef pi_bitfield pi_queue_properties;
-const pi_queue_properties PI_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE =
-        CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE;
-const pi_queue_properties PI_QUEUE_PROFILING_ENABLE = CL_QUEUE_PROFILING_ENABLE;
-const pi_queue_properties PI_QUEUE_ON_DEVICE = CL_QUEUE_ON_DEVICE;
-const pi_queue_properties PI_QUEUE_ON_DEVICE_DEFAULT =
-        CL_QUEUE_ON_DEVICE_DEFAULT;
-
-
-
-typedef _pi_result                  pi_result;
-typedef _pi_platform_info           pi_platform_info;
-typedef _pi_device_type             pi_device_type;
-typedef _pi_device_info             pi_device_info;
-typedef _pi_context_info            pi_context_info;
-typedef _pi_queue_info              pi_queue_info;
-typedef _pi_image_info              pi_image_info;
-typedef _pi_mem_type                pi_mem_type;
-typedef _pi_image_channel_order     pi_image_channel_order;
-typedef _pi_image_channel_type      pi_image_channel_type;
-
-// Opaque data type for compatibility with OpenMP.
-typedef void * _pi_offload_entry;
->>>>>>> sycl/unified/master
 
 /// Types of device binary.
-<<<<<<< HEAD
 using pi_device_binary_type = uint8_t;
 // format is not determined
 static constexpr pi_device_binary_type PI_DEVICE_BINARY_TYPE_NONE = 0;
 // specific to a device
 static constexpr pi_device_binary_type PI_DEVICE_BINARY_TYPE_NATIVE = 1;
-||||||| merged common ancestors
-typedef uint8_t pi_device_binary_type;
-static const uint8_t PI_DEVICE_BINARY_TYPE_NONE    = 0; // format is not determined
-static const uint8_t PI_DEVICE_BINARY_TYPE_NATIVE  = 1; // specific to a device
-=======
-typedef uint8_t pi_device_binary_type;
-// format is not determined
-static const pi_device_binary_type PI_DEVICE_BINARY_TYPE_NONE    = 0;
-// specific to a device
-static const pi_device_binary_type PI_DEVICE_BINARY_TYPE_NATIVE  = 1;
->>>>>>> sycl/unified/master
 // portable binary types go next
-<<<<<<< HEAD
 // SPIR-V
 static constexpr pi_device_binary_type PI_DEVICE_BINARY_TYPE_SPIRV = 2;
 // LLVM bitcode
 static constexpr pi_device_binary_type PI_DEVICE_BINARY_TYPE_LLVMIR_BITCODE = 3;
-||||||| merged common ancestors
-static const uint8_t PI_DEVICE_BINARY_TYPE_SPIRV   = 2;        // SPIR-V
-static const uint8_t PI_DEVICE_BINARY_TYPE_LLVMIR_BITCODE = 3; // LLVM bitcode
-=======
-// SPIR-V
-static const pi_device_binary_type PI_DEVICE_BINARY_TYPE_SPIRV   = 2;
-// LLVM bitcode
-static const pi_device_binary_type PI_DEVICE_BINARY_TYPE_LLVMIR_BITCODE = 3;
->>>>>>> sycl/unified/master
 
 // Device binary descriptor version supported by this library.
 static const uint16_t PI_DEVICE_BINARY_VERSION = 1;
@@ -1027,7 +917,6 @@ __SYCL_EXPORT pi_result piextContextCreateWithNativeHandle(
 //
 // Queue
 //
-<<<<<<< HEAD
 __SYCL_EXPORT pi_result piQueueCreate(pi_context context, pi_device device,
                                       pi_queue_properties properties,
                                       pi_queue *queue);
@@ -1037,19 +926,6 @@ __SYCL_EXPORT pi_result piQueueGetInfo(pi_queue command_queue,
                                        size_t param_value_size,
                                        void *param_value,
                                        size_t *param_value_size_ret);
-||||||| merged common ancestors
-pi_queue piQueueCreate( // TODO: change interface to return error code instead
-  pi_context              context,
-  pi_device               device,
-  const cl_queue_properties *    properties, // TODO: untie from OpenCL
-  pi_result *             result);
-=======
-pi_result piQueueCreate(
-  pi_context                  context,
-  pi_device                   device,
-  pi_queue_properties         properties,
-  pi_queue *                  queue);
->>>>>>> sycl/unified/master
 
 __SYCL_EXPORT pi_result piQueueRetain(pi_queue command_queue);
 

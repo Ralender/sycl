@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 // RUN: %clangxx -Xclang -verify %s -I %sycl_include -Xclang -verify-ignore-unexpected=note,warning -fsyntax-only
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -Xclang -verify %s -Xclang -verify-ignore-unexpected=note,warning -fsyntax-only
-=======
-// RUN: %clang -std=c++17 -Xclang -verify %s -Xclang -verify-ignore-unexpected=note,warning -fsyntax-only
->>>>>>> sycl/unified/master
 //==--------------- range_error.cpp - SYCL range error test ----------------==//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.

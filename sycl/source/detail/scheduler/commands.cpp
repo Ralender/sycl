@@ -1293,7 +1293,6 @@ cl_int EmptyCommand::enqueueImp() {
   return CL_SUCCESS;
 }
 
-<<<<<<< HEAD
 void EmptyCommand::addRequirement(Command *DepCmd, AllocaCommandBase *AllocaCmd,
                                   const Requirement *Req) {
   const Requirement &ReqRef = *Req;
@@ -1560,13 +1559,6 @@ void ExecCGCommand::printDot(std::ostream &Stream) const {
 }
 
 // SYCL has a parallel_for_work_group variant where the only NDRange
-||||||| merged common ancestors
-// SYCL has a parallel_for_work_group variant where the only NDRange
-=======
-// This function currently handles 2 use cases:
-//
-// 1) SYCL has a parallel_for_work_group variant where the only NDRange
->>>>>>> sycl/unified/master
 // characteristics set by a user is the number of work groups. This does not map
 // to the OpenCL clEnqueueNDRangeAPI, which requires global work size to be set
 // as well. This function determines local work size based on the device
@@ -1584,12 +1576,7 @@ void ExecCGCommand::printDot(std::ostream &Stream) const {
 // we must make sure we define a local work group size when we can justify the
 // kernel is a single task.
 static void adjustNDRangePerKernel(NDRDescT &NDR, RT::PiKernel Kernel,
-<<<<<<< HEAD
                                    const device_impl &DeviceImpl) {
-||||||| merged common ancestors
-                                   RT::PiDevice Device) {
-=======
-                                   RT::PiDevice Device) {
   // If work group size is 0 global size is 1, local size is 0 and
   // dimensions are 1, for all intents and purposes we can consider it a
   // single_task and pass 1 instead of nullptr. The precedence for this
@@ -1606,8 +1593,6 @@ static void adjustNDRangePerKernel(NDRDescT &NDR, RT::PiKernel Kernel,
   if (NDR.NumWorkGroups[0] == 0 && NDR.Dims == 1 && NDR.GlobalSize[0] == 1 &&
       NDR.LocalSize[0] == 0)
     NDR.LocalSize[0] = 1;
-
->>>>>>> sycl/unified/master
   if (NDR.GlobalSize[0] != 0)
     return; // GlobalSize is set - no need to adjust
   // check the prerequisites:

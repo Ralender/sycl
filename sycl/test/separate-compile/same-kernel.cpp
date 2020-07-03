@@ -6,22 +6,10 @@
 //
 //===----------------------------------------------------------------------===//
 // >> ---- compile src1
-<<<<<<< HEAD
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple -c %s -o %t-same-kernel-a.o
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -fsycl -c %s -o %t-same-kernel-a.o
-=======
-// RUN: %clang -std=c++17 -fsycl -c %s -o %t-same-kernel-a.o
->>>>>>> sycl/unified/master
 //
 // >> ---- compile src2
-<<<<<<< HEAD
 // RUN: %clangxx -DB_CPP=1 -fsycl -fsycl-targets=%sycl_triple -c %s -o %t-same-kernel-b.o
-||||||| merged common ancestors
-// RUN: %clang -DB_CPP=1 -std=c++11 -fsycl -c %s -o %t-same-kernel-b.o
-=======
-// RUN: %clang -DB_CPP=1 -std=c++17 -fsycl -c %s -o %t-same-kernel-b.o
->>>>>>> sycl/unified/master
 //
 // >> ---- link the full hetero app
 // RUN: %clangxx %t-same-kernel-a.o %t-same-kernel-b.o -o %t-same-kernel.exe -fsycl -fsycl-targets=%sycl_triple

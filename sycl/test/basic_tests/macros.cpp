@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -g %s -o %t.out -lstdc++ -lOpenCL -lsycl
-=======
-// RUN: %clang -std=c++17 -g %s -o %t.out -lstdc++ -lOpenCL -lsycl
->>>>>>> sycl/unified/master
 //==------------------- macros.cpp - SYCL buffer basic test ----------------==//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.

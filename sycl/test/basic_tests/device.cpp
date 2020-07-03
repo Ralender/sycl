@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 // RUN: %clangxx %s -o %t.out -I %sycl_include -lsycl
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -g %s -o %t.out -lstdc++ -lOpenCL -lsycl
-=======
-// RUN: %clang -std=c++17 -g %s -o %t.out -lstdc++ -lOpenCL -lsycl
->>>>>>> sycl/unified/master
 // RUN: env SYCL_DEVICE_TYPE=HOST %t.out
 
 //==--------------- device.cpp - SYCL device test --------------------------==//

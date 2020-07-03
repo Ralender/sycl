@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple -o %t.out %s
-||||||| merged common ancestors
-// RUN: %clang -fsycl -o %t.out %s -lstdc++ -lOpenCL
-=======
-// RUN: %clang -std=c++17 -fsycl -o %t.out %s -lstdc++ -lOpenCL
->>>>>>> sycl/unified/master
 // RUN: cd %T
 // RUN: env SYCL_DEVICE_TYPE=HOST %t.out
 // RUN: %CPU_RUN_PLACEHOLDER %t.out

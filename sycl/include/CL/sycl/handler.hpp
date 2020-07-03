@@ -8,10 +8,6 @@
 
 #pragma once
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include <CL/__spirv/spirv_vars.hpp>
-=======
 #ifdef __SYCL_SPIR_DEVICE__
 #include <CL/__spir/spir_vars.hpp>
 #ifdef __SYCL_DEVICE_ONLY__
@@ -24,7 +20,6 @@ namespace __device_builtin = __spirv;
 #endif
 #endif
 
->>>>>>> sycl/unified/master
 #include <CL/sycl/access/access.hpp>
 #include <CL/sycl/accessor.hpp>
 #include <CL/sycl/atomic.hpp>
@@ -44,13 +39,9 @@ namespace __device_builtin = __spirv;
 #include <CL/sycl/sampler.hpp>
 #include <CL/sycl/stl.hpp>
 
-<<<<<<< HEAD
 #include <algorithm>
-||||||| merged common ancestors
-=======
 #include <CL/sycl/xilinx/fpga/kernel_properties.hpp>
 
->>>>>>> sycl/unified/master
 #include <functional>
 #include <limits>
 #include <memory>
@@ -443,137 +434,11 @@ private:
     return {x, y};
   }
 
-<<<<<<< HEAD
   static id<3> getDelinearizedIndex(const range<3> Range, const size_t Index) {
     size_t x = Index / (Range[1] * Range[2]);
     size_t y = (Index / Range[2]) % Range[1];
     size_t z = Index % Range[2];
     return {x, y, z};
-||||||| merged common ancestors
-  template <typename KernelName, typename KernelType, int dimensions>
-  __attribute__((sycl_kernel)) void kernel_parallel_for(
-      typename std::enable_if<std::is_same<detail::lambda_arg_type<KernelType>,
-                                           id<dimensions>>::value &&
-                                  (dimensions > 0 && dimensions < 4),
-                              KernelType>::type KernelFunc) {
-    id<dimensions> global_id;
-
-    __spirv::initGlobalInvocationId<dimensions>(global_id);
-
-    KernelFunc(global_id);
-  }
-
-  template <typename KernelName, typename KernelType, int dimensions>
-  __attribute__((sycl_kernel)) void kernel_parallel_for(
-      typename std::enable_if<std::is_same<detail::lambda_arg_type<KernelType>,
-                                           item<dimensions>>::value &&
-                                  (dimensions > 0 && dimensions < 4),
-                              KernelType>::type KernelFunc) {
-    id<dimensions> global_id;
-    range<dimensions> global_size;
-
-    __spirv::initGlobalInvocationId<dimensions>(global_id);
-    __spirv::initGlobalSize<dimensions>(global_size);
-
-    item<dimensions, false> Item =
-        detail::Builder::createItem<dimensions, false>(global_size, global_id);
-    KernelFunc(Item);
-  }
-
-  template <typename KernelName, typename KernelType, int dimensions>
-  __attribute__((sycl_kernel)) void kernel_parallel_for(
-      typename std::enable_if<std::is_same<detail::lambda_arg_type<KernelType>,
-                                           nd_item<dimensions>>::value &&
-                                  (dimensions > 0 && dimensions < 4),
-                              KernelType>::type KernelFunc) {
-    range<dimensions> global_size;
-    range<dimensions> local_size;
-    id<dimensions> group_id;
-    id<dimensions> global_id;
-    id<dimensions> local_id;
-    id<dimensions> global_offset;
-
-    __spirv::initGlobalSize<dimensions>(global_size);
-    __spirv::initWorkgroupSize<dimensions>(local_size);
-    __spirv::initWorkgroupId<dimensions>(group_id);
-    __spirv::initGlobalInvocationId<dimensions>(global_id);
-    __spirv::initLocalInvocationId<dimensions>(local_id);
-    __spirv::initGlobalOffset<dimensions>(global_offset);
-
-    group<dimensions> Group = detail::Builder::createGroup<dimensions>(
-        global_size, local_size, group_id);
-    item<dimensions, true> globalItem =
-        detail::Builder::createItem<dimensions, true>(global_size, global_id,
-                                                      global_offset);
-    item<dimensions, false> localItem =
-        detail::Builder::createItem<dimensions, false>(local_size, local_id);
-    nd_item<dimensions> Nd_item =
-        detail::Builder::createNDItem<dimensions>(globalItem, localItem, Group);
-
-    KernelFunc(Nd_item);
-=======
-  template <typename KernelName, typename KernelType, int dimensions>
-  __attribute__((sycl_kernel)) void kernel_parallel_for(
-      typename std::enable_if<std::is_same<detail::lambda_arg_type<KernelType>,
-                                           id<dimensions>>::value &&
-                                  (dimensions > 0 && dimensions < 4),
-                              KernelType>::type KernelFunc) {
-    id<dimensions> global_id;
-
-    __device_builtin::initGlobalInvocationId<dimensions>(global_id);
-
-    KernelFunc(global_id);
-  }
-
-  template <typename KernelName, typename KernelType, int dimensions>
-  __attribute__((sycl_kernel)) void kernel_parallel_for(
-      typename std::enable_if<std::is_same<detail::lambda_arg_type<KernelType>,
-                                           item<dimensions>>::value &&
-                                  (dimensions > 0 && dimensions < 4),
-                              KernelType>::type KernelFunc) {
-    id<dimensions> global_id;
-    range<dimensions> global_size;
-
-    __device_builtin::initGlobalInvocationId<dimensions>(global_id);
-    __device_builtin::initGlobalSize<dimensions>(global_size);
-
-    item<dimensions, false> Item =
-        detail::Builder::createItem<dimensions, false>(global_size, global_id);
-    KernelFunc(Item);
-  }
-
-  template <typename KernelName, typename KernelType, int dimensions>
-  __attribute__((sycl_kernel)) void kernel_parallel_for(
-      typename std::enable_if<std::is_same<detail::lambda_arg_type<KernelType>,
-                                           nd_item<dimensions>>::value &&
-                                  (dimensions > 0 && dimensions < 4),
-                              KernelType>::type KernelFunc) {
-    range<dimensions> global_size;
-    range<dimensions> local_size;
-    id<dimensions> group_id;
-    id<dimensions> global_id;
-    id<dimensions> local_id;
-    id<dimensions> global_offset;
-
-    __device_builtin::initGlobalSize<dimensions>(global_size);
-    __device_builtin::initWorkgroupSize<dimensions>(local_size);
-    __device_builtin::initWorkgroupId<dimensions>(group_id);
-    __device_builtin::initGlobalInvocationId<dimensions>(global_id);
-    __device_builtin::initLocalInvocationId<dimensions>(local_id);
-    __device_builtin::initGlobalOffset<dimensions>(global_offset);
-
-    group<dimensions> Group = detail::Builder::createGroup<dimensions>(
-        global_size, local_size, group_id);
-    item<dimensions, true> globalItem =
-        detail::Builder::createItem<dimensions, true>(global_size, global_id,
-                                                      global_offset);
-    item<dimensions, false> localItem =
-        detail::Builder::createItem<dimensions, false>(local_size, local_id);
-    nd_item<dimensions> Nd_item =
-        detail::Builder::createNDItem<dimensions>(globalItem, localItem, Group);
-
-    KernelFunc(Nd_item);
->>>>>>> sycl/unified/master
   }
 
   /// Stores lambda to the template-free object
@@ -834,15 +699,8 @@ private:
                                       Dims == 1,
                                   item<Dims>, LambdaArgType>::type;
 #ifdef __SYCL_DEVICE_ONLY__
-<<<<<<< HEAD
     (void)NumWorkItems;
     kernel_parallel_for<NameT, TransformedArgType>(KernelFunc);
-||||||| merged common ancestors
-    kernel_single_task<NameT>(KernelFunc);
-=======
-    kernel_single_task<xilinx::reqd_work_group_size<1, 1, 1,
-                       NameT>>(KernelFunc);
->>>>>>> sycl/unified/master
 #else
     detail::checkValueRange<Dims>(NumWorkItems);
     MNDRDesc.set(std::move(NumWorkItems));
@@ -852,7 +710,6 @@ private:
 #endif
   }
 
-<<<<<<< HEAD
   /// Defines and invokes a SYCL kernel function for the specified range.
   ///
   /// The SYCL kernel function is defined as SYCL kernel object. The kernel
@@ -867,12 +724,6 @@ private:
     MKernel = detail::getSyclObjImpl(std::move(Kernel));
     detail::checkValueRange<Dims>(NumWorkItems);
     MNDRDesc.set(std::move(NumWorkItems));
-||||||| merged common ancestors
-    StoreLambda<NameT, KernelType, /*Dims*/ 0, void>(KernelFunc);
-=======
-    StoreLambda<xilinx::reqd_work_group_size<1, 1, 1,
-                NameT>, KernelType, /*Dims*/ 0, void>(KernelFunc);
->>>>>>> sycl/unified/master
     MCGType = detail::CG::KERNEL;
     extractArgsAndReqs();
   }
@@ -1260,7 +1111,6 @@ public:
 #endif // __SYCL_DEVICE_ONLY__
   }
 
-<<<<<<< HEAD
   /// Hierarchical kernel invocation method of a kernel defined as a lambda
   /// encoding the body of each work-group to launch.
   ///
@@ -1275,49 +1125,6 @@ public:
   /// \param KernelFunc is a lambda representing kernel.
   template <typename KernelName = detail::auto_name, typename KernelType,
             int Dims>
-||||||| merged common ancestors
-#ifdef __SYCL_DEVICE_ONLY__
-  template <typename KernelName, typename KernelType, int Dims>
-  __attribute__((sycl_kernel)) void
-  kernel_parallel_for_work_group(KernelType KernelFunc) {
-
-    range<Dims> GlobalSize;
-    range<Dims> LocalSize;
-    id<Dims> GroupId;
-
-    __spirv::initGlobalSize<Dims>(GlobalSize);
-    __spirv::initWorkgroupSize<Dims>(LocalSize);
-    __spirv::initWorkgroupId<Dims>(GroupId);
-
-    group<Dims> G =
-        detail::Builder::createGroup<Dims>(GlobalSize, LocalSize, GroupId);
-    KernelFunc(G);
-  }
-#endif // __SYCL_DEVICE_ONLY__
-
-  template <typename KernelName = csd::auto_name, typename KernelType, int Dims>
-=======
-#ifdef __SYCL_DEVICE_ONLY__
-  template <typename KernelName, typename KernelType, int Dims>
-  __attribute__((sycl_kernel)) void
-  kernel_parallel_for_work_group(KernelType KernelFunc) {
-
-    range<Dims> GlobalSize;
-    range<Dims> LocalSize;
-    id<Dims> GroupId;
-
-    __device_builtin::initGlobalSize<Dims>(GlobalSize);
-    __device_builtin::initWorkgroupSize<Dims>(LocalSize);
-    __device_builtin::initWorkgroupId<Dims>(GroupId);
-
-    group<Dims> G =
-        detail::Builder::createGroup<Dims>(GlobalSize, LocalSize, GroupId);
-    KernelFunc(G);
-  }
-#endif // __SYCL_DEVICE_ONLY__
-
-  template <typename KernelName = csd::auto_name, typename KernelType, int Dims>
->>>>>>> sycl/unified/master
   void parallel_for_work_group(range<Dims> NumWorkGroups,
                                range<Dims> WorkGroupSize,
                                KernelType KernelFunc) {
@@ -1424,15 +1231,9 @@ public:
     using NameT =
         typename detail::get_kernel_name_t<KernelName, KernelType>::name;
 #ifdef __SYCL_DEVICE_ONLY__
-<<<<<<< HEAD
     (void)Kernel;
-    kernel_single_task<NameT>(KernelFunc);
-||||||| merged common ancestors
-    kernel_single_task<NameT>(KernelFunc);
-=======
     kernel_single_task<xilinx::reqd_work_group_size<1, 1, 1,
                        NameT>>(KernelFunc);
->>>>>>> sycl/unified/master
 #else
     // No need to check if range is out of INT_MAX limits as it's compile-time
     // known constant

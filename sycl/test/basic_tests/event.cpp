@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 // REQUIRES: opencl
 
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out -L %opencl_libs_dir -lOpenCL
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -g %s -o %t.out -lstdc++ -lOpenCL -lsycl
-=======
-// RUN: %clang -std=c++17 -g %s -o %t.out -lstdc++ -lOpenCL -lsycl
->>>>>>> sycl/unified/master
 // RUN: env SYCL_DEVICE_TYPE=HOST %t.out
 //==--------------- event.cpp - SYCL event test ----------------------------==//
 //

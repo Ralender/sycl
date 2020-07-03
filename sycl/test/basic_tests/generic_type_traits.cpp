@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -fsycl %s -o %t.out -lstdc++ -lOpenCL -lsycl
-=======
-// RUN: %clang -std=c++17 -fsycl %s -o %t.out -lstdc++ -lOpenCL -lsycl
->>>>>>> sycl/unified/master
 
 #include <CL/sycl.hpp>
 #include <CL/sycl/detail/common.hpp>

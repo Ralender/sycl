@@ -164,7 +164,6 @@ public:
     // compilers are expected to optimize when possible
     detail::workGroupBarrier();
 #ifdef __SYCL_DEVICE_ONLY__
-<<<<<<< HEAD
     range<Dimensions> GlobalSize{
         __spirv::initGlobalSize<Dimensions, range<Dimensions>>()};
     range<Dimensions> LocalSize{
@@ -173,27 +172,6 @@ public:
         __spirv::initGlobalInvocationId<Dimensions, id<Dimensions>>()};
     id<Dimensions> LocalId{
         __spirv::initLocalInvocationId<Dimensions, id<Dimensions>>()};
-||||||| merged common ancestors
-    range<dimensions> GlobalSize;
-    range<dimensions> LocalSize;
-    id<dimensions> GlobalId;
-    id<dimensions> LocalId;
-
-    __spirv::initGlobalSize<dimensions>(GlobalSize);
-    __spirv::initWorkgroupSize<dimensions>(LocalSize);
-    __spirv::initGlobalInvocationId<dimensions>(GlobalId);
-    __spirv::initLocalInvocationId<dimensions>(LocalId);
-=======
-    range<dimensions> GlobalSize;
-    range<dimensions> LocalSize;
-    id<dimensions> GlobalId;
-    id<dimensions> LocalId;
-
-    __device_builtin::initGlobalSize<dimensions>(GlobalSize);
-    __device_builtin::initWorkgroupSize<dimensions>(LocalSize);
-    __device_builtin::initGlobalInvocationId<dimensions>(GlobalId);
-    __device_builtin::initLocalInvocationId<dimensions>(LocalId);
->>>>>>> sycl/unified/master
 
     // no 'iterate' in the device code variant, because
     // (1) this code is already invoked by each work item as a part of the
@@ -236,7 +214,6 @@ public:
                               WorkItemFunctionT Func) const {
     detail::workGroupBarrier();
 #ifdef __SYCL_DEVICE_ONLY__
-<<<<<<< HEAD
     range<Dimensions> GlobalSize{
         __spirv::initGlobalSize<Dimensions, range<Dimensions>>()};
     range<Dimensions> LocalSize{
@@ -252,41 +229,6 @@ public:
         detail::Builder::createItem<Dimensions, false>(LocalSize, LocalId);
     h_item<Dimensions> HItem = detail::Builder::createHItem<Dimensions>(
         GlobalItem, LocalItem, flexibleRange);
-||||||| merged common ancestors
-    range<dimensions> GlobalSize;
-    range<dimensions> LocalSize;
-    id<dimensions> GlobalId;
-    id<dimensions> LocalId;
-
-    __spirv::initGlobalSize<dimensions>(GlobalSize);
-    __spirv::initWorkgroupSize<dimensions>(LocalSize);
-    __spirv::initGlobalInvocationId<dimensions>(GlobalId);
-    __spirv::initLocalInvocationId<dimensions>(LocalId);
-
-    item<dimensions, false> GlobalItem =
-        detail::Builder::createItem<dimensions, false>(GlobalSize, GlobalId);
-    item<dimensions, false> LocalItem =
-        detail::Builder::createItem<dimensions, false>(LocalSize, LocalId);
-    h_item<dimensions> HItem =
-        detail::Builder::createHItem<dimensions>(GlobalItem, LocalItem);
-=======
-    range<dimensions> GlobalSize;
-    range<dimensions> LocalSize;
-    id<dimensions> GlobalId;
-    id<dimensions> LocalId;
-
-    __device_builtin::initGlobalSize<dimensions>(GlobalSize);
-    __device_builtin::initWorkgroupSize<dimensions>(LocalSize);
-    __device_builtin::initGlobalInvocationId<dimensions>(GlobalId);
-    __device_builtin::initLocalInvocationId<dimensions>(LocalId);
-
-    item<dimensions, false> GlobalItem =
-        detail::Builder::createItem<dimensions, false>(GlobalSize, GlobalId);
-    item<dimensions, false> LocalItem =
-        detail::Builder::createItem<dimensions, false>(LocalSize, LocalId);
-    h_item<dimensions> HItem =
-        detail::Builder::createHItem<dimensions>(GlobalItem, LocalItem);
->>>>>>> sycl/unified/master
 
     // iterate over flexible range with work group size stride; each item
     // performs flexibleRange/LocalSize iterations (if the former is divisible

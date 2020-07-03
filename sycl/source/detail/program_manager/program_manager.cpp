@@ -22,18 +22,12 @@
 #include <detail/program_impl.hpp>
 #include <detail/program_manager/program_manager.hpp>
 
-<<<<<<< HEAD
 #include <algorithm>
 #include <cassert>
-||||||| merged common ancestors
-#include <assert.h>
-=======
 #include <boost/container_hash/hash.hpp> // uuid_hasher
 #include <boost/uuid/uuid_generators.hpp> // sha name_gen/generator
 #include <boost/uuid/uuid_io.hpp> // uuid to_string
 
-#include <assert.h>
->>>>>>> sycl/unified/master
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -151,7 +145,25 @@ RetT *waitUntilBuilt(KernelProgramCache &Cache,
   return Result;
 }
 
-<<<<<<< HEAD
+// Gets a unique name to a kernel name which is currently computed from a SHA-1
+// hash of the kernel name. This unique name is used in place of the kernels
+// mangled name inside of xocc computed binaries containing the kernels.
+//
+// This is in part due to a limitation of xocc in which it requires kernel names
+// to be passed to it when compiling kernels and it doesn't handle certain
+// characters in mangled names very well e.g. '$'.
+static std::string getUniqueName(const char *KernelName) {
+
+  boost::uuids::name_generator_latest gen{boost::uuids::ns::dns()};
+
+  boost::uuids::uuid udoc = gen(KernelName);
+
+  boost::hash<boost::uuids::uuid> uuid_hasher;
+  std::size_t uuid_hash_value = uuid_hasher(udoc);
+
+  return "xSYCL" + std::to_string(uuid_hash_value);
+}
+
 /// Try to fetch entity (kernel or program) from cache. If there is no such
 /// entity try to build it. Throw any exception build process may throw.
 /// This method eliminates unwanted builds by employing atomic variable with
@@ -185,55 +197,7 @@ RetT *getOrBuild(KernelProgramCache &KPCache, KeyT &&CacheKey,
 
     InsertionTookPlace = Inserted.second;
     BuildResult = &Inserted.first->second;
-||||||| merged common ancestors
-RT::PiKernel ProgramManager::getOrCreateKernel(OSModuleHandle M,
-                                               const context &Context,
-                                               const string_class &KernelName) {
-  if (DbgProgMgr > 0) {
-    std::cerr << ">>> ProgramManager::getOrCreateKernel(" << M << ", "
-              << getRawSyclObjImpl(Context) << ", " << KernelName << ")\n";
-=======
-// Gets a unique name to a kernel name which is currently computed from a SHA-1
-// hash of the kernel name. This unique name is used in place of the kernels
-// mangled name inside of xocc computed binaries containing the kernels.
-//
-// This is in part due to a limitation of xocc in which it requires kernel names
-// to be passed to it when compiling kernels and it doesn't handle certain
-// characters in mangled names very well e.g. '$'.
-static std::string getUniqueName(const char *KernelName) {
-
-  boost::uuids::name_generator_latest gen{boost::uuids::ns::dns()};
-
-  boost::uuids::uuid udoc = gen(KernelName);
-
-  boost::hash<boost::uuids::uuid> uuid_hasher;
-  std::size_t uuid_hash_value = uuid_hasher(udoc);
-
-  return "xSYCL" + std::to_string(uuid_hash_value);
-}
-
-RT::PiKernel ProgramManager::getOrCreateKernel(OSModuleHandle M,
-                                               const context &Context,
-                                               const string_class &KernelName) {
-
-  /// \todo: Extend this to work for more than the first device in the context
-  /// most of the run-time only works with a single device right now, but this
-  /// should be changed long term.
-  /// \todo: This works at the moment, but there needs to be a change earlier on
-  /// in the runtime to exchange the real kernel name with the hashed kernel
-  /// name so the hashed variant is always used when its a Xilinx device.
-  auto Devices = Context.get_devices();
-  std::string uniqueName = KernelName;
-  if (!Devices.empty()
-      && Devices[0].get_info<info::device::vendor>() == "Xilinx")
-    uniqueName = getUniqueName(uniqueName.c_str());
-
-  if (DbgProgMgr > 0) {
-    std::cerr << ">>> ProgramManager::getOrCreateKernel(" << M << ", "
-              << getRawSyclObjImpl(Context) << ", " << uniqueName << ")\n";
->>>>>>> sycl/unified/master
   }
-<<<<<<< HEAD
 
   // no insertion took place, thus some other thread has already inserted smth
   // in the cache
@@ -252,24 +216,6 @@ RT::PiKernel ProgramManager::getOrCreateKernel(OSModuleHandle M,
       if (BuildResult->State.compare_exchange_strong(Expected, Desired))
         break; // this thread is the building thread now
     }
-||||||| merged common ancestors
-  RT::PiProgram Program = getBuiltOpenCLProgram(M, Context);
-  std::map<string_class, RT::PiKernel> &KernelsCache = m_CachedKernels[Program];
-  RT::PiKernel &Kernel = KernelsCache[KernelName];
-  if (!Kernel) {
-    RT::PiResult Err = PI_SUCCESS;
-    PI_CALL((Kernel = RT::piKernelCreate(
-        Program, KernelName.c_str(), &Err), Err));
-=======
-
-  RT::PiProgram Program = getBuiltOpenCLProgram(M, Context);
-  std::map<string_class, RT::PiKernel> &KernelsCache = m_CachedKernels[Program];
-  RT::PiKernel &Kernel = KernelsCache[uniqueName];
-  if (!Kernel) {
-    RT::PiResult Err = PI_SUCCESS;
-    PI_CALL((Kernel = RT::piKernelCreate(
-        Program, uniqueName.c_str(), &Err), Err));
->>>>>>> sycl/unified/master
   }
 
   // only the building thread will run this

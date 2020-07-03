@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 // REQUIRES: opencl
 
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -fsycl %s -o %t.out -lstdc++ -lOpenCL -lsycl
-=======
-// RUN: %clang -std=c++17 -fsycl %s -o %t.out -lstdc++ -lOpenCL -lsycl
->>>>>>> sycl/unified/master
 // RUN: env SYCL_DEVICE_TYPE=HOST %t.out
 // RUN: %CPU_RUN_PLACEHOLDER %t.out
 // RUN: %GPU_RUN_PLACEHOLDER %t.out
@@ -39,7 +33,6 @@ int main() {
   Device.get_info<info::device::sub_group_independent_forward_progress>();
   Device.get_info<info::device::max_num_sub_groups>();
 
-<<<<<<< HEAD
   try {
     size_t max_wg_size = Device.get_info<info::device::max_work_group_size>();
     program Prog(Queue.get_context());
@@ -58,37 +51,6 @@ int main() {
                            "global double* c) {*a=*b+*c; }\n");
     kernel Kernel = Prog.get_kernel("kernel_sg");
     uint32_t Res = 0;
-||||||| merged common ancestors
-    /* Basic sub-group functionality is supported as part of cl_khr_subgrou
-     * extension or as core OpenCL 2.1 feature. */
-    if (!core_sg_supported(Device)) {
-      std::cout << "Skipping test\n";
-      return 0;
-    }
-    try {
-      size_t max_sg_num = get_sg_size(Device);
-      size_t max_wg_size = Device.get_info<info::device::max_work_group_size>();
-      program Prog(Queue.get_context());
-      /* TODO: replace with pure SYCL code when fixed problem with consumption 
-       * kernels defined using program objects on GPU device
-      Prog.build_with_kernel_type<kernel_sg>();
-      kernel Kernel = Prog.get_kernel<kernel_sg>();
-=======
-    /* Basic sub-group functionality is supported as part of cl_khr_subgrou
-     * extension or as core OpenCL 2.1 feature. */
-    if (!core_sg_supported(Device)) {
-      std::cout << "Skipping test\n";
-      return 0;
-    }
-    try {
-      size_t max_sg_num = get_sg_size(Device);
-      size_t max_wg_size = Device.get_info<info::device::max_work_group_size>();
-      program Prog(Queue.get_context());
-      /* TODO: replace with pure SYCL code when fixed problem with consumption
-       * kernels defined using program objects on GPU device
-      Prog.build_with_kernel_type<kernel_sg>();
-      kernel Kernel = Prog.get_kernel<kernel_sg>();
->>>>>>> sycl/unified/master
 
     /* sub_group_sizes can be quared only of cl_intel_required_subgroup_size
      * extention is supported by device*/

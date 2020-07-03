@@ -2,13 +2,7 @@
 
 // RUN: %clang_cc1 -x cl -cl-std=CL2.0 %S/sg.cl -triple spir64-unknown-unknown -emit-llvm-bc -o %T/kernel_ocl.bc -include opencl-c.h
 // RUN: llvm-spirv %T/kernel_ocl.bc -o %T/kernel_ocl.spv
-<<<<<<< HEAD
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out -L %opencl_libs_dir -lOpenCL
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -fsycl %s -o %t.out -lstdc++ -lOpenCL -lsycl
-=======
-// RUN: %clang -std=c++17 -fsycl %s -o %t.out -lstdc++ -lOpenCL -lsycl
->>>>>>> sycl/unified/master
 // RUN: env SYCL_DEVICE_TYPE=HOST %t.out
 // RUN: %CPU_RUN_PLACEHOLDER %t.out %T/kernel_ocl.spv
 // RUN: %GPU_RUN_PLACEHOLDER %t.out %T/kernel_ocl.spv

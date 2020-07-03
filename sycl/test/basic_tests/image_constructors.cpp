@@ -1,21 +1,9 @@
-<<<<<<< HEAD
 // UNSUPPORTED: cuda
 // CUDA cannot support SYCL 1.2.1 images.
 //
 // RUN: %clangxx %s -o %t1.out -lsycl -I %sycl_include
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 %s -o %t1.out -lstdc++ -lOpenCL -lsycl
-=======
-// RUN: %clang -std=c++17 %s -o %t1.out -lstdc++ -lOpenCL -lsycl
->>>>>>> sycl/unified/master
 // RUN: env SYCL_DEVICE_TYPE=HOST %t1.out
-<<<<<<< HEAD
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t2.out
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -fsycl %s -o %t2.out -lstdc++ -lOpenCL -lsycl
-=======
-// RUN: %clang -std=c++17 -fsycl %s -o %t2.out -lstdc++ -lOpenCL -lsycl
->>>>>>> sycl/unified/master
 // RUN: env SYCL_DEVICE_TYPE=HOST %t2.out
 // RUN: %CPU_RUN_PLACEHOLDER %t2.out
 // RUN: %GPU_RUN_PLACEHOLDER %t2.out

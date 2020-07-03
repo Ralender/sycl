@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.run
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -fsycl %s -o %t.run -lOpenCL -lsycl -lstdc++
-=======
-// RUN: %clang -std=c++17 -fsycl %s -o %t.run -lOpenCL -lsycl -lstdc++
->>>>>>> sycl/unified/master
 // RUN: %GPU_RUN_PLACEHOLDER %t.run
 // RUN: %CPU_RUN_PLACEHOLDER %t.run
 // RUN: %ACC_RUN_PLACEHOLDER %t.run

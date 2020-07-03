@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-||||||| merged common ancestors
-// RUN: %clang -fsycl -fsycl-targets=spir64-unknown-linux-sycldevice -c %s -o %t.o
-// RUN: %clang -fsycl -fsycl-link-targets=spir64-unknown-linux-sycldevice %t.o -o %t.spv
-// RUN: llvm-spirv -r %t.spv -o %t.bc
-// RUN: %clang -fsycl -fsycl-add-targets=binary:%t.bc %t.o -o %t.out -lOpenCL -lsycl -lstdc++
-//
-// Only CPU supports LLVM IR bitcode as a binary
-// RUN: %CPU_RUN_PLACEHOLDER %t.out
-
-=======
-// RUN: %clang -std=c++17 -fsycl -fsycl-targets=spir64-unknown-linux-sycldevice -c %s -o %t.o
-// RUN: %clang -std=c++17 -fsycl -fsycl-link-targets=spir64-unknown-linux-sycldevice %t.o -o %t.spv
-// RUN: llvm-spirv -r %t.spv -o %t.bc
-// RUN: %clang -std=c++17 -fsycl -fsycl-add-targets=binary:%t.bc %t.o -o %t.out -lOpenCL -lsycl -lstdc++
-//
-// Only CPU supports LLVM IR bitcode as a binary
-// RUN: %CPU_RUN_PLACEHOLDER %t.out
-
->>>>>>> sycl/unified/master
 //==----- with-llvm-bc.cpp - SYCL kernel with LLVM IR bitcode as binary ----==//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.

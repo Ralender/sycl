@@ -7,22 +7,10 @@
 //===----------------------------------------------------------------------===//
 
 // The test checks that the types can be used to pass kernel parameters by value
-<<<<<<< HEAD
 // RUN: %clangxx -fsyntax-only %s -I %sycl_include -Wno-sycl-strict -Xclang -verify-ignore-unexpected=note,warning
-||||||| merged common ancestors
-// RUN: %clang -std=c++11 -fsyntax-only %s
-=======
-// RUN: %clang -std=c++17 -fsyntax-only %s
->>>>>>> sycl/unified/master
 
 // Check that the test can be compiled with device compiler as well.
-<<<<<<< HEAD
 // RUN: %clangxx -fsycl-device-only -fsyntax-only %s -I %sycl_include -Wno-sycl-strict
-||||||| merged common ancestors
-// RUN: %clang --sycl -fsyntax-only %s
-=======
-// RUN: %clang -std=c++17 --sycl -fsyntax-only %s
->>>>>>> sycl/unified/master
 
 #include <CL/sycl.hpp>
 

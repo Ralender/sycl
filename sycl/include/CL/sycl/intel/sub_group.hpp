@@ -8,16 +8,8 @@
 
 #pragma once
 
-<<<<<<< HEAD
 #include <CL/__spirv/spirv_ops.hpp>
-||||||| merged common ancestors
-=======
-#ifdef __SYCL_SPIR_DEVICE__
-#include <CL/__spir/spir_vars.hpp>
-#else
->>>>>>> sycl/unified/master
 #include <CL/__spirv/spirv_vars.hpp>
-#endif
 
 #include <CL/sycl/access/access.hpp>
 #include <CL/sycl/detail/defines.hpp>
