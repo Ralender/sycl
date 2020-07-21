@@ -40,16 +40,16 @@ namespace selector_defines {
     class CompiledForDeviceSelector : public device_selector {
      public:
        int operator()(const cl::sycl::device &Device) const override {
-#ifdef __SYCL_XILINX_ONLY__
+// #ifdef __SYCL_XILINX_ONLY__
         const std::string DeviceVendor =
           Device.get_info<info::device::vendor>();
         return (DeviceVendor.find("Xilinx") != std::string::npos) ? 1 : -1;
-#else
-        const std::string DeviceVendor =
-          Device.get_info<info::device::vendor>();
-        return (DeviceVendor.find("Intel(R) Corporation") != std::string::npos)
-                ? 1 : -1;
-#endif
+// #else
+//         const std::string DeviceVendor =
+//           Device.get_info<info::device::vendor>();
+//         return (DeviceVendor.find("Intel(R) Corporation") != std::string::npos)
+//                 ? 1 : -1;
+// #endif
        }
      };
 }
