@@ -1782,6 +1782,9 @@ void MDFieldPrinter::printBool(StringRef Name, bool Value,
 }
 
 void MDFieldPrinter::printDIFlags(StringRef Name, DINode::DIFlags Flags) {
+  // if (!Triple(Context->getTargetTriple()).isXilinxFPGA())
+  Flags = (DINode::DIFlags)(Flags & (uint32_t)((1 << 24) - 1));
+
   if (!Flags)
     return;
 
@@ -1975,14 +1978,15 @@ static void writeDIGenericSubrange(raw_ostream &Out, const DIGenericSubrange *N,
 }
 
 static void writeDIEnumerator(raw_ostream &Out, const DIEnumerator *N,
-                              TypePrinting *, SlotTracker *, const Module *) {
+                              TypePrinting *, SlotTracker *, const Module *M) {
   Out << "!DIEnumerator(";
   MDFieldPrinter Printer(Out);
   Printer.printString("name", N->getName(), /* ShouldSkipEmpty */ false);
   Printer.printAPInt("value", N->getValue(), N->isUnsigned(),
                      /*ShouldSkipZero=*/false);
-  if (N->isUnsigned())
-    Printer.printBool("isUnsigned", true);
+  if (!Triple(M->getTargetTriple()).isXilinxFPGA())
+    if (N->isUnsigned())
+      Printer.printBool("isUnsigned", true);
   Out << ")";
 }
 
@@ -2126,7 +2130,8 @@ static void writeDICompileUnit(raw_ostream &Out, const DICompileUnit *N,
   Printer.printBool("splitDebugInlining", N->getSplitDebugInlining(), true);
   Printer.printBool("debugInfoForProfiling", N->getDebugInfoForProfiling(),
                     false);
-  Printer.printNameTableKind("nameTableKind", N->getNameTableKind());
+  if (!Triple(Context->getTargetTriple()).isXilinxFPGA())
+    Printer.printNameTableKind("nameTableKind", N->getNameTableKind());
   Printer.printBool("rangesBaseAddress", N->getRangesBaseAddress(), false);
   Printer.printString("sysroot", N->getSysRoot());
   Printer.printString("sdk", N->getSDK());
@@ -2151,11 +2156,13 @@ static void writeDISubprogram(raw_ostream &Out, const DISubprogram *N,
     Printer.printInt("virtualIndex", N->getVirtualIndex(), false);
   Printer.printInt("thisAdjustment", N->getThisAdjustment());
   Printer.printDIFlags("flags", N->getFlags());
-  Printer.printDISPFlags("spFlags", N->getSPFlags());
+  if (!Triple(Context->getTargetTriple()).isXilinxFPGA())
+    Printer.printDISPFlags("spFlags", N->getSPFlags());
   Printer.printMetadata("unit", N->getRawUnit());
   Printer.printMetadata("templateParams", N->getRawTemplateParams());
   Printer.printMetadata("declaration", N->getRawDeclaration());
-  Printer.printMetadata("retainedNodes", N->getRawRetainedNodes());
+  if (!Triple(Context->getTargetTriple()).isXilinxFPGA())
+    Printer.printMetadata("retainedNodes", N->getRawRetainedNodes());
   Printer.printMetadata("thrownTypes", N->getRawThrownTypes());
   Out << ")";
 }

@@ -110,6 +110,11 @@ public:
   bool isPICDefault() const override { return false; }
   bool isPIEDefault() const override { return false; }
   bool isPICDefaultForced() const override { return false; }
+  void adjustDebugInfoKind(codegenoptions::DebugInfoKind &DebugInfoKind,
+                           const llvm::opt::ArgList &Args) const override {
+    if (DebugInfoKind != codegenoptions::NoDebugInfo)
+      DebugInfoKind = codegenoptions::DebugLineTablesOnly;
+  }
 
   void addClangWarningOptions(llvm::opt::ArgStringList &CC1Args) const override;
   CXXStdlibType GetCXXStdlibType(const llvm::opt::ArgList &Args) const override;

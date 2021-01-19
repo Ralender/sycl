@@ -195,13 +195,6 @@ void SYCL::LinkerXOCC::constructSYCLXOCCCommand(
     case llvm::Triple::FPGASubArch_hw: CmdArgs.push_back("hw"); break;
     case llvm::Triple::FPGASubArch_hw_emu: CmdArgs.push_back("hw_emu"); break;
     case llvm::Triple::FPGASubArch_sw_emu: CmdArgs.push_back("sw_emu"); break;
-    // case llvm::Triple::NoSubArch: {
-    //   if (const char* Mode = std::getenv("XCL_EMULATION_MODE")) {
-    //     CmdArgs.push_back(Mode);
-    //     break;
-    //   }
-    //   CmdArgs.push_back("hw");
-    // }
     default:
       llvm_unreachable("invalid subarch");
   }

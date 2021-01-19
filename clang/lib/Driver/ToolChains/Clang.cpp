@@ -3777,13 +3777,6 @@ static void RenderDebugOptions(const ToolChain &TC, const Driver &D,
                                bool EmitCodeView, ArgStringList &CmdArgs,
                                codegenoptions::DebugInfoKind &DebugInfoKind,
                                DwarfFissionKind &DwarfFission) {
-  
-  /// The XOCC backend currently doesn't deal properly with some debug metadata.
-  /// and there is currently no support for any debugability of device code.
-  /// so we disable emition of debug info for device code.
-  if (T.isXilinxFPGA())
-    return;
-
   if (Args.hasFlag(options::OPT_fdebug_info_for_profiling,
                    options::OPT_fno_debug_info_for_profiling, false) &&
       checkDebugInfoOption(

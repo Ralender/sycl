@@ -185,13 +185,15 @@ $LLVM_LINK "${TMP_PATH}_${SOURCE_FILE_NAME}_kernels-optimized.bc" \
 # We also only wish to emit LLVM IR assembly language format and not bitcode
 # format as we currently use the llvm assembler packaged with xocc to generate
 # our final bitcode file.
-$OPT -S -preparesycl -globaldce \
+$OPT -preparesycl -globaldce \
   "${TMP_PATH}_${SOURCE_FILE_NAME}_kernels-linked.xpirbc" -o \
   "${TMP_PATH}_${SOURCE_FILE_NAME}_kernels-linked.simple.xpirbc"
 
 $OPT -S -O3 -xoccIRDowngrader \
-  "${TMP_PATH}_${SOURCE_FILE_NAME}_kernels-linked.simple.xpirbc" -o \
-  "${TMP_PATH}_${SOURCE_FILE_NAME}_kernels-linked.opt.xpirbc"
+  "${TMP_PATH}_${SOURCE_FILE_NAME}_kernels-linked.simple.xpirbc" -o - \
+  | sed "s/\!DISubprogram/distinct \!DISubprogram/g" \
+  | sed "s/distinct distinct/distinct/g" \
+  > "${TMP_PATH}_${SOURCE_FILE_NAME}_kernels-linked.opt.xpirbc"
 
 # Generate our final bitcode file with the xocc llvm-as (Clang/LLVM 7 for now)
 # this is to work around a problem with the ByVal attribute. The bitcode that
