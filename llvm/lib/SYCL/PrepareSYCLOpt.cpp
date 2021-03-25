@@ -113,11 +113,20 @@ struct PrepareSYCLOpt : public ModulePass {
     }
   }
 
+  void forceInlining(Module &M) {
+    for (auto& F : M.functions()) {
+      if (F.isDeclaration() || F.getCallingConv() == CallingConv::SPIR_KERNEL)
+        continue;
+      F.addFnAttr(Attribute::AlwaysInline);
+    }
+  }
+
   bool runOnModule(Module &M) override {
     turnNonKernelsIntoPrivate(M);
     setCallingConventions(M);
     lowerArrayPartition(M);
     removeAnnotations(M);
+    forceInlining(M);
     return true;
   }
 };

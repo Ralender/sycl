@@ -577,6 +577,7 @@ int main(int argc, char **argv) {
   // these as a module rather than separate passes
   // (e.g. initializeTransformUtils(Registry) etc. above)
   initializeASFixerPass(Registry);
+  initializeDeleteASCPass(Registry);
   initializeInSPIRationPass(Registry);
   initializeKernelPropGenPass(Registry);
   initializeXOCCIRDowngraderPass(Registry);
