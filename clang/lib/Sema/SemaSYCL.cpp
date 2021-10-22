@@ -1084,8 +1084,6 @@ static QualType calculateKernelNameType(ASTContext &Ctx,
   return TAL->get(0).getAsType().getCanonicalType();
 }
 
-std::string computeUniqueSYCLVXXName(StringRef Name, StringRef Demangle);
-
 // Gets a name for the OpenCL kernel function, calculated from the first
 // template argument of the kernel caller function.
 static std::pair<std::string, std::string>
@@ -1102,8 +1100,7 @@ constructKernelName(Sema &S, const FunctionDecl *KernelCallerFunc,
   std::string Res = std::string(Out.str());
   std::string Str =
       SYCLUniqueStableNameExpr::ComputeName(S.getASTContext(), KernelNameType);
-  Res = computeUniqueSYCLVXXName(Res, KernelNameType.getAsString());
-  return {Res, computeUniqueSYCLVXXName(Str, Str)};
+  return {Res, Str};
 }
 
 static bool isDefaultSPIRArch(ASTContext &Context) {
