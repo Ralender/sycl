@@ -1093,7 +1093,7 @@ constructKernelName(Sema &S, const FunctionDecl *KernelCallerFunc,
   std::string Str =
       SYCLUniqueStableNameExpr::ComputeName(S.getASTContext(), KernelNameType);
   Res = computeUniqueSYCLVXXName(Res, KernelNameType.getAsString());
-  return {Res, Str};
+  return {Res, computeUniqueSYCLVXXName(Str, Str)};
 }
 
 static bool isDefaultSPIRArch(ASTContext &Context) {
