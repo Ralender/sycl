@@ -30,6 +30,91 @@ import shutil
 import subprocess
 import tempfile
 
+# This pipeline should be able to do any promotion O3 is capable of
+# and some more control flow optimizations then strictly necessary.
+# Some more minimization is possible
+VXX_PassPipeline = [
+"-preparesycl",
+"-lower-expect",
+"-simplifycfg",
+"-sroa",
+"-early-cse",
+"-annotation2metadata",
+"-callsite-splitting",
+"-ipsccp",
+"-called-value-propagation",
+"-globalopt",
+"-mem2reg",
+"-deadargelim",
+"-simplifycfg",
+"-inline",
+"-function-attrs",
+"-argpromotion",
+"-sroa",
+"-early-cse-memssa",
+"-speculative-execution",
+"-jump-threading",
+"-correlated-propagation",
+"-simplifycfg",
+"-libcalls-shrinkwrap",
+"-tailcallelim",
+"-simplifycfg",
+"-reassociate",
+"-loop-simplify",
+"-lcssa",
+"-licm",
+"-loop-rotate",
+"-licm",
+"-loop-unswitch",
+"-simplifycfg",
+"-loop-simplify",
+"-lcssa",
+"-loop-idiom",
+"-indvars",
+"-loop-deletion",
+"-loop-unroll",
+"-sroa",
+"-mldst-motion",
+"-gvn",
+"-sccp",
+"-bdce",
+"-jump-threading",
+"-correlated-propagation",
+"-adce",
+"-memcpyopt",
+"-dse",
+"-loop-simplify",
+"-lcssa",
+"-simplifycfg",
+"-elim-avail-extern",
+"-rpo-function-attrs",
+"-globalopt",
+"-globaldce",
+"-float2int",
+"-lower-constant-intrinsics",
+"-loop-simplify",
+"-lcssa",
+"-loop-rotate",
+"-loop-simplify",
+"-loop-load-elim",
+"-simplifycfg",
+"-loop-simplify",
+"-lcssa",
+"-loop-unroll",
+"-loop-simplify",
+"-lcssa",
+"-licm",
+"-alignment-from-assumptions",
+"-strip-dead-prototypes",
+"-globaldce",
+"-constmerge",
+"-loop-simplify",
+"-lcssa",
+"-loop-sink",
+"-instsimplify",
+"-div-rem-pairs",
+"-simplifycfg",
+]
 
 class TmpDirManager:
     def __init__(self, tmpdir: Path, prefix: str, autodelete: bool):
@@ -136,18 +221,14 @@ class CompilationDriver:
             self.tmpdir /
             f"{outstem}-kernels-prepared.bc"
         )
-        opt_options = ["--sycl-vxx",
-                       "-preparesycl", "-globaldce"]
+        opt_options = ["--sycl-vxx", "-preparesycl"]
+        opt_options.extend(VXX_PassPipeline)
         if not self.hls_flow:
             opt_options.extend([
                 "-inline", "-infer-address-spaces",
                 "-flat-address-space=0", "-globaldce"
             ])
         opt_options.extend([
-           "-domtree", "-argpromotion", "-deadargelim",
-            "-globalopt", "-domtree", "-inline", "-early-cse",
-            "-domtree", "-argpromotion", "-deadargelim",
-            "-sroa",
             "-inSPIRation", "-o", f"{self.prepared_bc}"
         ])
 
