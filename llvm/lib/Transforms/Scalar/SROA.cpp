@@ -115,9 +115,8 @@ STATISTIC(NumVectorized, "Number of vectorized aggregates");
 static cl::opt<bool> SROAStrictInbounds("sroa-strict-inbounds", cl::init(false),
                                         cl::Hidden);
 
-
-/// Hidden option to experiment with completely strict handling of inbounds
-/// GEPs.
+/// Prevent SROA from desegregating structs containing variable width integers
+/// with non-common bits sizes.
 static cl::opt<bool> SROAVXXConservative("sroa-vxx-conservative", cl::init(false),
                                         cl::Hidden);
 
@@ -3652,33 +3651,21 @@ private:
   }
 };
 
-bool isValidSROAVXXStruct(StructType *ST, const DataLayout& DL) {
-  // Case of alias struct
-  if (ST->getNumElements() == 1 && ST->getElementType(0)->isStructTy()) {
-    return isValidSROAVXXStruct(cast<StructType>(ST->getElementType(0)), DL);
-  }
-  for (Type *T : ST->elements()) {
-    if (!T->isSingleValueType()) {
-      ST->dump();
-      T->dump();
-      return false;
-    }
-    if (T->isIntegerTy() && !DL.isLegalInteger(T->getIntegerBitWidth())) {
-      ST->dump();
-      T->dump();
-      return false;
-    }
-  }
-  ST->dump();
+bool isValidSROAVXXType(Type *Ty) {
+  if (auto *ST = dyn_cast<StructType>(Ty))
+    return llvm::all_of(ST->elements(), isValidSROAVXXType);
+  if (auto *AT = dyn_cast<ArrayType>(Ty))
+    return isValidSROAVXXType(AT->getArrayElementType());
+  if (auto *IT = dyn_cast<IntegerType>(Ty))
+    return ((IT->getBitWidth() % 8) == 0) &&
+           llvm::isPowerOf2_32(IT->getBitWidth());
   return true;
 }
 
 bool isAIValidForVXXSROA(AllocaInst *AI) {
-  if (StructType *ST = dyn_cast<StructType>(AI->getAllocatedType())) {
-    const DataLayout& DL = AI->getModule()->getDataLayout();
-    return isValidSROAVXXStruct(ST, DL);
-  }
-  return false;
+  bool Result = isValidSROAVXXType(AI->getAllocatedType());
+  LLVM_DEBUG(dbgs() << "SROA is VXX promotable:" << *AI << " = " << Result << "\n");
+  return Result;
 }
 
 } // end anonymous namespace

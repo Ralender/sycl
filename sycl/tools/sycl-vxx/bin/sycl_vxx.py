@@ -166,7 +166,7 @@ class CompilationDriver:
         # TODO: XILINX_PLATFORM should be passed by clang driver instead
         self.xilinx_platform = environ['XILINX_PLATFORM']
         if environ.get("XILINX_CLANG_39_BUILD_PATH") is not None:
-            vitis_clang_bin = Path(environ["XILINX_CLANG_39_BUILD_PATH"])
+            vitis_clang_bin = Path(environ["XILINX_CLANG_39_BUILD_PATH"]) / "bin"
         else:
             vitis_clang_bin = (
                 self.vitis_bin_dir.parent /
@@ -221,7 +221,7 @@ class CompilationDriver:
             self.tmpdir /
             f"{outstem}-kernels-prepared.bc"
         )
-        opt_options = ["--sycl-vxx", "-preparesycl"]
+        opt_options = ["--sycl-vxx", "--sroa-vxx-conservative", "-preparesycl"]
         opt_options.extend(VXX_PassPipeline)
         if not self.hls_flow:
             opt_options.extend([
@@ -229,7 +229,7 @@ class CompilationDriver:
                 "-flat-address-space=0", "-globaldce"
             ])
         opt_options.extend([
-            "-inSPIRation", "-o", f"{self.prepared_bc}"
+            "-inSPIRation", "-debug-only=sroa", "-o", f"{self.prepared_bc}"
         ])
 
         opt = self.clang_path / "opt"
